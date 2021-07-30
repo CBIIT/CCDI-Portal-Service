@@ -1,0 +1,481 @@
+type file_set {
+  file_set_id: String
+  file_ordinal: String
+  file_id: String
+  file_name: String
+  file_md5: String
+  file_content_format: String
+  submitted_file: submitted_file @relation(name:"files_of_submitted_file", direction:OUT)
+}
+
+type study {
+  study_id: String
+  pi_name: String
+  pi_institution: String
+  pi_email: String
+  pi_era_id: String
+  study_title: String
+  study_phs_id: String
+  is_published: Boolean
+  doi: String
+  submitted_2_repo: Boolean
+  gdc: Boolean
+  pdc: Boolean
+  dbGap: Boolean
+  sra: Boolean
+  genbank: Boolean
+  figshare: Boolean
+  other_repo: String
+  submitted_files: [submitted_file] @relation(name:"study_within_submitted_file", direction:OUT)
+}
+
+type submitted_file {
+  submitted_file_id: String
+  ccdi_arm: String
+  submission_date: String
+  submission_ts: String
+  source_ip: String
+  file_count_validate: Boolean
+  filename_list_validate: Boolean
+  study_registered: Boolean
+  permitted_4_gru: Boolean
+  data_identifying: Boolean
+  species: String
+  human_subjects: Boolean
+  files_count: Int
+  file_names: String
+  file_name_suffixes: String
+  is_free_text: Boolean
+  is_tsv_csv: Boolean
+  is_json: Boolean
+  is_xml: Boolean
+  is_other_non_binary: Boolean
+  is_excel: Boolean
+  is_dicom: Boolean
+  is_other_binary_image: Boolean
+  is_other_binary_non_image: Boolean
+  total_size_in_bytes: Int
+  subject_demographics: Boolean
+  subject_clinical_data: Boolean
+  subject_treatment_response_data: Boolean
+  subject_outcomes_data: Boolean
+  subject_imaging_data_raw: Boolean
+  subject_imaging_data_written_findings: Boolean
+  subject_data_metadata: Boolean
+  biospecimen_data: Boolean
+  surgical_pathology_reports: Boolean
+  histopathology_images_raw: Boolean
+  primary_dna_sequence_data: Boolean
+  germline_data: Boolean
+  somatic_data: Boolean
+  derived_germline_variants: Boolean
+  derived_somatic_variants: Boolean
+  primary_rnaseq_expression_data: Boolean
+  scrna_sequencing: Boolean
+  scchromatin_sequencing: Boolean
+  proteogenomics_data: Boolean
+  rppa_data: Boolean
+  fish: Boolean
+  imc: Boolean
+  in_vitro_cell_proliferation_assay: Boolean
+  in_vitro_small_molecule_sensitivity_assays: Boolean
+  in_vitro_crispr_screens: Boolean
+  in_vitro_shrna_orf_screens: Boolean
+  other: Boolean
+  other_specify: String
+  primary_datatype: String
+  derived_interventional_clinical_trial: Boolean
+  derived_observational_study: Boolean
+  have_subject_ids: Boolean
+  have_pii: Boolean
+  contain_biospecimen_ids: Boolean
+  contain_biospecimen_2_subject_mappings: Boolean
+  submitters: [submitter] @relation(name:"submitted_by", direction:OUT)
+  studies: [study] @relation(name:"study_within_submitted_file", direction:IN)
+  file_sets: [file_set] @relation(name:"files_of_submitted_file", direction:IN)
+}
+
+type submitter {
+  submitter_id: String
+  submitter_name: String
+  submitter_identifier: String
+  submitter_email: String
+  submitter_era_id: String
+  institution_id: String
+  institution_name: String
+  program_id: String
+  submitted_files: [submitted_file] @relation(name:"submitted_by", direction:IN)
+}
+
+type GroupCount {
+    group: String
+    subjects: Int
+}
+
+type ProgramInfo {
+    program_id: String
+    start_date: String
+    end_date: String
+    num_files: Int
+    num_studies: Int
+}
+
+type SubmitterInfo {
+    submitter_id: String
+    submitter_name: String
+    submitter_identifier: String
+    submitter_email: String
+    submitter_era_id: String
+    institution_id: String
+    institution_name: String
+    program_id: String
+}
+
+type SubmittedFileInfo {
+    ccdi_arm: String
+    submission_date: String
+    submission_ts: String
+    source_ip: String
+    file_count_validate: Boolean
+    filename_list_validate: Boolean
+    study_registered: Boolean
+    num_file_sets: Int
+} 
+
+type StudyInfo {
+    pi_name: String
+    pi_institution: String
+    pi_email: String
+    pi_era_id: String
+    study_title: String
+    study_phs_id: String
+    is_published: Boolean
+    doi: String
+    submitted_2_repo: Boolean
+    gdc: Boolean
+    pdc: Boolean
+    dbGap: Boolean
+    sra: Boolean
+    genbank: Boolean
+    figshare: Boolean
+    other_repo: String
+}
+
+type File_Set_Info {
+    file_set_id: String
+    file_ordinal: Int
+    file_id: String
+    file_name: String
+    file_md5: String
+    file_content_format: String
+}
+
+type SubmittedFileDetail {
+    submitted_file_id: String
+    submitter_id: String
+    submitter_name: String
+    ccdi_arm: String
+    submission_date: String
+    submission_ts: String
+    source_ip: String
+    file_count_validate: Boolean
+    filename_list_validate: Boolean
+    species: String
+    human_subjects: Boolean
+    total_size_in_bytes: Int
+    primary_datatype: String
+    have_subject_ids: Boolean
+    have_pii: Boolean
+    contain_biospecimen_ids: Boolean
+    studies: [StudyInfo]
+    files: [File_Set_Info]
+}
+
+type SubmittedFileOverview {
+    submitted_file_id: String
+    ccdi_arm: String
+    submission_date: String
+    submission_ts: String
+    source_ip: String
+    file_count_validate: Boolean
+    filename_list_validate: Boolean
+    study_registered: Boolean
+    primary_datatype: String
+    derived_interventional_clinical_trial: Boolean
+    derived_observational_study: Boolean
+    have_subject_ids: Boolean
+    have_pii: Boolean
+    contain_biospecimen_ids: Boolean
+    contain_biospecimen_2_subject_mappings: Boolean
+    files: [file_set]
+}
+
+type SubmittedFileOverview2 {
+    submitted_file_id: String
+    ccdi_arm: String
+    submission_date: String
+    submission_ts: String
+    source_ip: String
+    file_count_validate: Boolean
+    filename_list_validate: Boolean
+    study_registered: Boolean
+    primary_datatype: String
+    derived_interventional_clinical_trial: Boolean
+    derived_observational_study: Boolean
+    have_subject_ids: Boolean
+    have_pii: Boolean
+    contain_biospecimen_ids: Boolean
+    contain_biospecimen_2_subject_mappings: Boolean
+}
+
+type SearchResult {
+    numberOfPrograms: Int
+    numberOfStudies: Int
+    numberOfSubmitters: Int
+    numberOfFiles: Int
+    fileIds: [String]
+    firstPage: [SubmittedFileOverview2]
+}
+
+schema {
+    query: QueryType
+}
+
+type QueryType {
+    schemaVersion: String @cypher(statement: "RETURN '1.1.0'")
+
+    "Simple counts"
+    numberOfPrograms: Int @cypher(statement: "MATCH (n:submitter) return count(n)")
+    numberOfSubmitters: Int @cypher(statement: "MATCH (n:submitter) return count(n)")
+    numberOfStudies: Int @cypher(statement: "MATCH (n:study) return count(n)")
+    numberOfFiles: Int @cypher(statement: "MATCH (n:submitted_file) return count(n)")
+
+    programInfo: [ProgramInfo] @cypher(statement: """
+        MATCH (sb:submitter)
+        OPTIONAL MATCH (sb)<--(sf:submitted_file)
+        OPTIONAL MATCH (sf)<--(s:study)
+        RETURN {
+            program_id: sb.program_id,
+            start_date: "2006-04-07",
+            end_date: "2018-03-18",
+            num_files: COUNT(DISTINCT sf),
+            num_studies: COUNT(DISTINCT s)
+        }
+    """, passThrough: true)
+
+    "Group counts"
+    fileCountByProgram(submitted_file_ids: [String] = []): [GroupCount] @cypher(statement: """
+        MATCH (s:submitter)
+        OPTIONAL MATCH (s)<--(sf:submitted_file)
+        WITH DISTINCT s, sf
+            WHERE (size($submitted_file_ids) = 0 OR sf.submitted_file_id IN $submitted_file_ids)
+        RETURN { group: s.program_id,
+                 subjects: count(sf) }
+    """, passThrough: true)
+    fileCountByContentFormat(submitted_file_ids: [String] = []): [GroupCount] @cypher(statement: """
+        MATCH (sf:submitted_file)
+        OPTIONAL MATCH (sf)<--(fs:file_set)
+        WITH DISTINCT sf, fs
+            WHERE (size($submitted_file_ids) = 0 OR sf.submitted_file_id IN $submitted_file_ids)
+        RETURN { group: fs.file_content_format,
+                 subjects: COUNT(DISTINCT sf.submitted_file_id)}
+    """, passThrough: true)
+
+    fileOverViewPaged(submitted_file_ids: [String] = [""], order_by: String = ""): [SubmittedFileOverview] @cypher(statement: """
+        MATCH (sf:submitted_file)
+          WHERE ($submitted_file_ids IS NULL OR $submitted_file_ids = [""] OR sf.submitted_file_id IN $submitted_file_ids)
+        OPTIONAL MATCH (sf)<--(fs:file_set)
+        WITH
+            collect(DISTINCT fs {.*}) AS files, sf
+        RETURN {
+            submitted_file_id: sf.submitted_file_id,
+            ccdi_arm: sf.ccdi_arm,
+            submission_date: sf.submission_date,
+            submission_ts: sf.submission_ts,
+            source_ip: sf.source_ip,
+            file_count_validate: sf.file_count_validate,
+            filename_list_validate: sf.filename_list_validate,
+            study_registered: sf.study_registered,
+            primary_datatype: sf.primary_datatype,
+            derived_interventional_clinical_trial: sf.derived_interventional_clinical_trial,
+            derived_observational_study: sf.derived_observational_study,
+            have_subject_ids: sf.have_subject_ids,
+            have_pii: sf.have_pii,
+            contain_biospecimen_ids: sf.contain_biospecimen_ids,
+            contain_biospecimen_2_subject_mappings: sf.contain_biospecimen_2_subject_mappings,
+            files: files
+        }
+        ORDER BY CASE $order_by
+            WHEN 'submitted_file_id' THEN sf.submitted_file_id
+            WHEN 'ccdi_arm' THEN sf.ccdi_arm
+            WHEN 'submission_date' THEN sf.submission_date
+            WHEN 'submission_ts' THEN sf.submission_ts
+            WHEN 'source_ip' THEN sf.source_ip
+            WHEN 'file_count_validate' THEN sf.file_count_validate
+            WHEN 'filename_list_validate' THEN sf.filename_list_validate
+            WHEN 'study_registered' THEN sf.study_registered
+            WHEN 'primary_datatype' THEN sf.primary_datatype
+            WHEN 'derived_interventional_clinical_trial' THEN sf.derived_interventional_clinical_trial
+            WHEN 'derived_observational_study' THEN sf.derived_observational_study
+            WHEN 'have_subject_ids' THEN sf.have_subject_ids
+            WHEN 'have_pii' THEN sf.have_pii
+            WHEN 'contain_biospecimen_ids' THEN sf.contain_biospecimen_ids
+            WHEN 'contain_biospecimen_2_subject_mappings' THEN sf.contain_biospecimen_2_subject_mappings
+            ELSE sf.submitted_file_id END
+    """, passThrough: true)
+
+    fileOverViewPagedDesc(submitted_file_ids: [String] = [""], order_by: String = ""): [SubmittedFileOverview] @cypher(statement: """
+        MATCH (sf:submitted_file)
+          WHERE ($submitted_file_ids IS NULL OR $submitted_file_ids = [""] OR sf.submitted_file_id IN $submitted_file_ids)
+        OPTIONAL MATCH (sf)<--(fs:file_set)
+        WITH
+            collect(DISTINCT fs {.*}) AS files, sf
+        RETURN {
+            submitted_file_id: sf.submitted_file_id,
+            ccdi_arm: sf.ccdi_arm,
+            submission_date: sf.submission_date,
+            submission_ts: sf.submission_ts,
+            source_ip: sf.source_ip,
+            file_count_validate: sf.file_count_validate,
+            filename_list_validate: sf.filename_list_validate,
+            study_registered: sf.study_registered,
+            primary_datatype: sf.primary_datatype,
+            derived_interventional_clinical_trial: sf.derived_interventional_clinical_trial,
+            derived_observational_study: sf.derived_observational_study,
+            have_subject_ids: sf.have_subject_ids,
+            have_pii: sf.have_pii,
+            contain_biospecimen_ids: sf.contain_biospecimen_ids,
+            contain_biospecimen_2_subject_mappings: sf.contain_biospecimen_2_subject_mappings,
+            files: files
+        }
+        ORDER BY CASE $order_by
+            WHEN 'submitted_file_id' THEN sf.submitted_file_id
+            WHEN 'ccdi_arm' THEN sf.ccdi_arm
+            WHEN 'submission_date' THEN sf.submission_date
+            WHEN 'submission_ts' THEN sf.submission_ts
+            WHEN 'source_ip' THEN sf.source_ip
+            WHEN 'file_count_validate' THEN sf.file_count_validate
+            WHEN 'filename_list_validate' THEN sf.filename_list_validate
+            WHEN 'study_registered' THEN sf.study_registered
+            WHEN 'primary_datatype' THEN sf.primary_datatype
+            WHEN 'derived_interventional_clinical_trial' THEN sf.derived_interventional_clinical_trial
+            WHEN 'derived_observational_study' THEN sf.derived_observational_study
+            WHEN 'have_subject_ids' THEN sf.have_subject_ids
+            WHEN 'have_pii' THEN sf.have_pii
+            WHEN 'contain_biospecimen_ids' THEN sf.contain_biospecimen_ids
+            WHEN 'contain_biospecimen_2_subject_mappings' THEN sf.contain_biospecimen_2_subject_mappings
+            ELSE sf.submitted_file_id END DESC
+    """, passThrough: true)
+
+    "Facet search counts"
+    filterFileCountByProgram(
+        programs: [String] = [],
+        file_content_formats: [String] = []
+    ): [GroupCount] @cypher(statement: """
+        // Filtering subjects
+        MATCH (s:submitter)<--(sf:submitted_file)<--(fs:file_set)
+          WHERE (size($programs) = 0 OR s.program_id IN $programs)
+            AND (size($file_content_formats) = 0 OR fs.file_content_format IN $file_content_formats)
+        WITH DISTINCT sf, s
+        RETURN {group: s.program_id , subjects: count(sf)}
+    """, passThrough: true)
+
+    filterFileCountByContentFormat(
+        programs: [String] = [],
+        file_content_formats: [String] = []
+    ): [GroupCount] @cypher(statement: """
+        // Filtering subjects
+        MATCH (s:submitter)<--(sf:submitted_file)<--(fs:file_set)
+          WHERE (size($programs) = 0 OR s.program_id IN $programs)
+            AND (size($file_content_formats) = 0 OR fs.file_content_format IN $file_content_formats)
+        WITH DISTINCT sf, fs
+        RETURN {group: fs.file_content_format , subjects: COUNT(DISTINCT sf.submitted_file_id)}
+    """, passThrough: true)
+
+    searchFiles (
+          programs: [String] = [],
+          file_content_formats: [String] = [],
+          first: Int = 100
+    ): SearchResult @cypher(statement: """
+        // Filtering subjects
+        MATCH (s:submitter)<--(sf:submitted_file)<--(fs:file_set)
+          WHERE (size($programs) = 0 OR s.program_id IN $programs)
+            AND (size($file_content_formats) = 0 OR fs.file_content_format IN $file_content_formats)
+        MATCH (sf)<--(st:study)
+        WITH DISTINCT sf, fs, s, st
+        RETURN  {
+            fileIds: COLLECT(DISTINCT sf.submitted_file_id),
+            numberOfSubmitters: COUNT(DISTINCT s.submitter_id),
+            numberOfPrograms: COUNT(DISTINCT s.program_id),
+            numberOfStudies: COUNT(DISTINCT st.study_id),
+            numberOfFiles: COUNT(DISTINCT sf.submitted_file_id),
+            firstPage: COLLECT( DISTINCT({
+                          submitted_file_id: sf.submitted_file_id,
+                          ccdi_arm: sf.ccdi_arm,
+                          submission_date: sf.submission_date,
+                          submission_ts: sf.submission_ts,
+                          source_ip: sf.source_ip,
+                          file_count_validate: sf.file_count_validate,
+                          filename_list_validate: sf.filename_list_validate,
+                          study_registered: sf.study_registered,
+                          primary_datatype: sf.primary_datatype,
+                          derived_interventional_clinical_trial: sf.derived_interventional_clinical_trial,
+                          derived_observational_study: sf.derived_observational_study,
+                          have_subject_ids: sf.have_subject_ids,
+                          have_pii: sf.have_pii,
+                          contain_biospecimen_ids: sf.contain_biospecimen_ids,
+                          contain_biospecimen_2_subject_mappings: sf.contain_biospecimen_2_subject_mappings
+                      }))[0..$first]
+        }
+    """, passThrough:true)
+
+    fileDetail(submitted_file_id: String): SubmittedFileDetail @cypher(statement:  """
+        MATCH (sf:submitted_file {submitted_file_id: $submitted_file_id})
+        MATCH (s:submitter)<--(sf)<--(fs:file_set)
+        MATCH (sf)<--(st:study)
+        WITH sf, s, st, collect(fs {.*}) AS files
+        RETURN {
+            submitted_file_id: sf.submitted_file_id,
+            submitter_id: s.submitter_id,
+            submitter_name: s.submitter_name,
+            ccdi_arm: sf.ccdi_arm,
+            submission_date: sf.submission_date,
+            submission_ts: sf.submission_ts,
+            source_ip: sf.source_ip,
+            file_count_validate: sf.file_count_validate,
+            filename_list_validate: sf.filename_list_validate,
+            species: sf.species,
+            human_subjects: sf.human_subjects,
+            total_size_in_bytes: sf.total_size_in_bytes,
+            primary_datatype: sf.primary_datatype,
+            have_subject_ids: sf.have_subject_ids,
+            have_pii: sf.have_pii,
+            contain_biospecimen_ids: sf.contain_biospecimen_ids,
+            files: files,
+            studies: COLLECT(DISTINCT st {.*})
+        }
+    """, passThrough: true)
+
+    filesInList(file_ids: [String], order_by: String = ""): [File_Set_Info] @cypher(statement: """
+        MATCH (f:file_set)
+        WHERE f.file_id in $file_ids
+        WITH f
+        RETURN {
+            file_set_id: f.file_set_id,
+            file_ordinal: f.file_ordinal,
+            file_id: f.file_id,
+            file_name: f.file_name,
+            file_md5: f.file_md5,
+            file_content_format: f.file_content_format
+        }
+        ORDER BY CASE $order_by
+            WHEN 'file_set_id' THEN f.file_set_id
+            WHEN 'file_ordinal' THEN f.file_ordinal
+            WHEN 'file_id' THEN f.file_id
+            WHEN 'file_name' THEN f.file_name
+            WHEN 'file_md5' THEN f.file_md5
+            WHEN 'file_content_format' THEN f.file_content_format
+            ELSE f.file_set_id END
+    """, passThrough: true)
+
+}
