@@ -458,7 +458,7 @@ type QueryType {
 
     filesInList(file_ids: [String], order_by: String = ""): [File_Set_Info] @cypher(statement: """
         MATCH (f:file_set)
-        WHERE f.file_id in $file_ids
+        WHERE f.file_set_id in $file_ids
         WITH f
         RETURN {
             file_set_id: f.file_set_id,
@@ -476,6 +476,28 @@ type QueryType {
             WHEN 'file_md5' THEN f.file_md5
             WHEN 'file_content_format' THEN f.file_content_format
             ELSE f.file_set_id END
+    """, passThrough: true)
+
+    filesInListDesc(file_ids: [String], order_by: String = ""): [File_Set_Info] @cypher(statement: """
+        MATCH (f:file_set)
+        WHERE f.file_set_id in $file_ids
+        WITH f
+        RETURN {
+            file_set_id: f.file_set_id,
+            file_ordinal: f.file_ordinal,
+            file_id: f.file_id,
+            file_name: f.file_name,
+            file_md5: f.file_md5,
+            file_content_format: f.file_content_format
+        }
+        ORDER BY CASE $order_by
+            WHEN 'file_set_id' THEN f.file_set_id
+            WHEN 'file_ordinal' THEN f.file_ordinal
+            WHEN 'file_id' THEN f.file_id
+            WHEN 'file_name' THEN f.file_name
+            WHEN 'file_md5' THEN f.file_md5
+            WHEN 'file_content_format' THEN f.file_content_format
+            ELSE f.file_set_id END DESC
     """, passThrough: true)
 
 }
